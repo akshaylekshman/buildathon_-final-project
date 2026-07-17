@@ -17,7 +17,8 @@ import {
   BarChart3, 
   Settings, 
   LogOut,
-  Activity
+  Activity,
+  Pill
 } from "lucide-react";
 
 const NAV_ITEMS = [
@@ -25,6 +26,7 @@ const NAV_ITEMS = [
   { name: "AI Chat", href: "/chat", icon: MessageSquare },
   { name: "Prescription Analyzer", href: "/analyzer/prescription", icon: FileText },
   { name: "Medical Report", href: "/analyzer/report", icon: Clipboard },
+  { name: "Medicine Reviewer", href: "/reviewer", icon: Pill },
   { name: "Appointments", href: "/appointments", icon: Calendar },
   { name: "Medicine Reminder", href: "/reminders", icon: Bell },
   { name: "Patient History", href: "/history", icon: Activity },
@@ -43,10 +45,10 @@ export function Sidebar() {
       <div className="h-20 flex items-center px-8 border-b border-border">
         <Link href="/dashboard" className="flex items-center gap-3">
           <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-primary to-accent flex items-center justify-center text-white font-bold text-xl shadow-lg">
-            M
+            N
           </div>
           <span className="font-bold text-xl tracking-tight bg-clip-text text-transparent bg-gradient-to-r from-foreground to-foreground/70">
-            MediBridge AI
+            NEXCARE AI
           </span>
         </Link>
       </div>

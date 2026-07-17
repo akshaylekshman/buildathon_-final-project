@@ -9,7 +9,7 @@ const inter = Inter({
 });
 
 export const metadata: Metadata = {
-  title: "MediBridge AI - Healthcare Assistant",
+  title: "NEXCARE AI - Healthcare Assistant",
   description: "AI Powered Healthcare Assistant using Gemma 4.",
 };
 

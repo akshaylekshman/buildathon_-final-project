@@ -22,7 +22,7 @@ export default function LoginPage() {
               <HeartPulse className="w-7 h-7" />
             </div>
             <h1 className="text-2xl font-bold tracking-tight">Welcome Back</h1>
-            <p className="text-sm text-foreground/60 text-center mt-2">Sign in to your MediBridge AI account to access your medical dashboard.</p>
+            <p className="text-sm text-foreground/60 text-center mt-2">Sign in to your NEXCARE AI account to access your medical dashboard.</p>
           </div>
 
           <form className="space-y-4" onSubmit={(e) => e.preventDefault()}>

@@ -21,7 +21,7 @@ export default function SignupPage() {
               <HeartPulse className="w-7 h-7" />
             </div>
             <h1 className="text-2xl font-bold tracking-tight">Create an Account</h1>
-            <p className="text-sm text-foreground/60 text-center mt-2">Join MediBridge AI for a smarter healthcare experience.</p>
+            <p className="text-sm text-foreground/60 text-center mt-2">Join NEXCARE AI for a smarter healthcare experience.</p>
           </div>
 
           <form className="space-y-4" onSubmit={(e) => e.preventDefault()}>
