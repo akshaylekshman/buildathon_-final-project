@@ -1,8 +1,8 @@
 [
   {
     "id": "8825339d-ab68-4686-9a5e-392a7d19ab17",
-    "name": "gokul",
-    "email": "akshay@gmail.com",
+    "name": "john",
+    "email": "john345@gmail.com",
     "passwordHash": "50f72a2f610b5323e9bb4c75efe3be3f:153d3e3e61a65ece5d1d09a681dee680c96becf25e0c527268972b103b60142977b9b7f4199c2d92701df992fd3176bd8510591ed2020fce6ff838b2e5514088",
     "createdAt": "2026-07-17T23:23:13.130Z"
   },
@@ -12,5 +12,12 @@
     "email": "aksh@gmail.com",
     "passwordHash": "23504c29448aea708ed3340bc1ade488:8243c29f4240a3b4789751f522df679c97d4c23dd46f75f08458094054dcc315d2ae3a483ced1d78c431ca12f602496dfd8c59a519fe761cab19d9ba8adfa819",
     "createdAt": "2026-07-17T23:24:21.004Z"
+  },
+  {
+    "id": "8640fed5-3a4b-4506-8351-8d3bcefe09bf",
+    "name": "Akshay",
+    "email": "akshay@gmail.com",
+    "passwordHash": "google-oauth:google-oauth-akshay",
+    "createdAt": "2026-07-18T03:30:18.437Z"
   }
 ]
