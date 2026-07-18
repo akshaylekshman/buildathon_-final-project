@@ -200,7 +200,7 @@ The application architecture separates the frontend and backend, allowing FastAP
 
 # GitHub Repository
 
-Paste your repository link here.
+
 https://github.com/akshaylekshman/buildathon_-final-project
 
 
@@ -209,7 +209,7 @@ https://github.com/akshaylekshman/buildathon_-final-project
 
 # Screenshots
 
-[Place application screenshots inside:
+
 
 (https://drive.google.com/drive/folders/1KZmOWLFyvAc7eoW_6BVwxJxWjEVSbcbj?usp=sharing)
 
@@ -299,4 +299,4 @@ This project was developed as part of a hackathon and is intended for educationa
 
 **Project Name:** NEXCARE AI
 
-Built with ❤️ using React, Next.js, Tailwind CSS, TypeScript, Framer Motion, and Google Gemma 4.
+Built with using React, Next.js, Tailwind CSS, TypeScript, Framer Motion, and Google Gemma 4.
