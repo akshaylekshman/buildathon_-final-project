@@ -37,7 +37,54 @@ export default function ChatPage() {
   ]);
   const [inputValue, setInputValue] = React.useState("");
   const [isTyping, setIsTyping] = React.useState(false);
+  const [isListening, setIsListening] = React.useState(false);
   const chatContainerRef = React.useRef<HTMLDivElement>(null);
+  const recognitionRef = React.useRef<any>(null);
+
+  React.useEffect(() => {
+    if (typeof window !== "undefined") {
+      const SpeechRecognition = window.SpeechRecognition || (window as any).webkitSpeechRecognition;
+      if (SpeechRecognition) {
+        const recognition = new SpeechRecognition();
+        recognition.continuous = false;
+        recognition.interimResults = true;
+
+        recognition.onresult = (event: any) => {
+          let text = "";
+          for (let i = 0; i < event.results.length; i++) {
+            text += event.results[i][0].transcript;
+          }
+          setInputValue(text);
+        };
+
+        recognition.onerror = (event: any) => {
+          console.error("Speech recognition error", event.error);
+          setIsListening(false);
+        };
+
+        recognition.onend = () => {
+          setIsListening(false);
+        };
+
+        recognitionRef.current = recognition;
+      }
+    }
+  }, []);
+
+  const toggleListening = () => {
+    if (isListening) {
+      recognitionRef.current?.stop();
+      setIsListening(false);
+    } else {
+      if (recognitionRef.current) {
+        setInputValue(""); // Clear before speaking
+        recognitionRef.current.start();
+        setIsListening(true);
+      } else {
+        alert("Microphone access or speech recognition is not supported in this browser.");
+      }
+    }
+  };
 
   const suggestedQuestions = [
     "What should I do for a mild fever?",
@@ -171,7 +218,7 @@ export default function ChatPage() {
                 {msg.role === 'user' ? <User className="w-4 h-4" /> : <Bot className="w-4 h-4" />}
               </div>
               <div className="space-y-2">
-                <div className={`p-4 rounded-2xl text-sm leading-relaxed ${msg.role === 'user' ? 'bg-primary text-white rounded-tr-sm' : 'bg-card border border-border rounded-tl-sm'}`}>
+                <div className={`p-4 rounded-2xl text-sm leading-relaxed whitespace-pre-wrap ${msg.role === 'user' ? 'bg-primary text-primary-foreground rounded-tr-sm' : 'bg-card text-card-foreground border border-border rounded-tl-sm'}`}>
                   {msg.content}
                 </div>
                 {msg.role === 'assistant' && (
@@ -234,7 +281,15 @@ export default function ChatPage() {
                   <Send className="w-4 h-4" />
                 </button>
               ) : (
-                <button className="p-2.5 bg-secondary/10 text-secondary rounded-full hover:bg-secondary/20 transition-colors">
+                <button 
+                  onClick={toggleListening}
+                  className={`p-2.5 rounded-full transition-colors ${
+                    isListening 
+                      ? 'bg-red-500 text-white animate-pulse shadow-lg' 
+                      : 'bg-secondary/10 text-secondary hover:bg-secondary/20'
+                  }`}
+                  title={isListening ? "Stop listening" : "Start voice typing"}
+                >
                   <Mic className="w-4 h-4" />
                 </button>
               )}

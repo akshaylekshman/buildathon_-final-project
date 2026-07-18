@@ -1,4 +1,6 @@
 import { NextResponse } from "next/server";
+import { callGemini, parseGeminiJSON } from "@/lib/gemini";
+import { callOllama, parseOllamaJSON } from "@/lib/ollama";
 
 // ─────────────────────────────────────────────
 // RAG Helper: Fetch medicine data from OpenFDA
@@ -125,38 +127,40 @@ Provide a JSON response with these exact fields:
 
 IMPORTANT: Return ONLY the valid JSON object. No markdown. No explanation outside the JSON.`;
 
-    const response = await fetch("http://127.0.0.1:11434/api/generate", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        model: "gemma4:e2b",
-        prompt: `${systemPrompt}\n\nMedicine to review: "${medicineName}"`,
-        format: "json",
-        stream: false,
-      }),
-    });
-
-    if (!response.ok) {
-      const errorText = await response.text();
-      return NextResponse.json(
-        { error: `Ollama error: ${errorText}` },
-        { status: response.status }
-      );
-    }
-
-    const data = await response.json();
-
+    const useLocalAI = process.env.USE_LOCAL_AI === "true";
+    let rawText = "";
     let parsedResult;
-    try {
-      parsedResult = JSON.parse(data.response);
-    } catch {
-      return NextResponse.json(
-        { error: "AI model returned invalid JSON. Please try again.", raw: data.response },
-        { status: 500 }
+
+    if (useLocalAI) {
+      console.log("Using local Ollama AI for medicine review");
+      rawText = await callOllama(
+        `Medicine to review: "${medicineName}"`,
+        systemPrompt
       );
+      try {
+        parsedResult = parseOllamaJSON(rawText);
+      } catch {
+        return NextResponse.json(
+          { error: "Local AI model returned invalid JSON. Please try again.", raw: rawText },
+          { status: 500 }
+        );
+      }
+    } else {
+      console.log("Using cloud Gemini AI for medicine review");
+      rawText = await callGemini(
+        `Medicine to review: "${medicineName}"`,
+        systemPrompt
+      );
+      try {
+        parsedResult = parseGeminiJSON(rawText);
+      } catch {
+        return NextResponse.json(
+          { error: "AI model returned invalid JSON. Please try again.", raw: rawText },
+          { status: 500 }
+        );
+      }
     }
 
-    // Expose whether RAG data was used
     const ragUsed = !!(fdaData || wikiData);
     return NextResponse.json({ success: true, ragEnhanced: ragUsed, ...parsedResult });
   } catch (error: any) {

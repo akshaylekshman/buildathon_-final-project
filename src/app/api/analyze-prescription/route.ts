@@ -1,4 +1,6 @@
 import { NextResponse } from "next/server";
+import { callGemini, parseGeminiJSON } from "@/lib/gemini";
+import { callOllama, parseOllamaJSON } from "@/lib/ollama";
 
 // ─────────────────────────────────────────────
 // RAG Helper: Fetch medicine data from OpenFDA for a single drug name
@@ -92,39 +94,42 @@ Output ONLY the raw JSON matching this schema:
 }
 `;
 
-    const response = await fetch("http://127.0.0.1:11434/api/generate", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        model: "gemma4:e2b",
-        prompt: `${systemPrompt}\n\nPrescription Text to analyze:\n${text}`,
-        format: "json",
-        stream: false,
-      }),
-    });
-
-    if (!response.ok) {
-      const errorText = await response.text();
-      return NextResponse.json(
-        { error: `Ollama error: ${errorText}` },
-        { status: response.status }
-      );
-    }
-
-    const data = await response.json();
-
+    const useLocalAI = process.env.USE_LOCAL_AI === "true";
+    let rawText = "";
     let parsedResult;
-    try {
-      parsedResult = JSON.parse(data.response);
-    } catch (parseError) {
-      console.error("Failed to parse JSON response from Ollama:", data.response);
-      return NextResponse.json({
-        success: false,
-        error: "Invalid JSON returned by AI model",
-        raw: data.response
-      }, { status: 500 });
+
+    if (useLocalAI) {
+      console.log("Using local Ollama AI for prescription analysis");
+      rawText = await callOllama(
+        `Prescription Text to analyze:\n${text}`,
+        systemPrompt
+      );
+      try {
+        parsedResult = parseOllamaJSON(rawText);
+      } catch (parseError) {
+        console.error("Failed to parse JSON response from Ollama:", rawText);
+        return NextResponse.json({
+          success: false,
+          error: "Invalid JSON returned by local AI model",
+          raw: rawText,
+        }, { status: 500 });
+      }
+    } else {
+      console.log("Using cloud Gemini AI for prescription analysis");
+      rawText = await callGemini(
+        `Prescription Text to analyze:\n${text}`,
+        systemPrompt
+      );
+      try {
+        parsedResult = parseGeminiJSON(rawText);
+      } catch (parseError) {
+        console.error("Failed to parse JSON response from Gemini:", rawText);
+        return NextResponse.json({
+          success: false,
+          error: "Invalid JSON returned by AI model",
+          raw: rawText,
+        }, { status: 500 });
+      }
     }
 
     return NextResponse.json({ ...parsedResult, ragEnhanced: !!ragContext });

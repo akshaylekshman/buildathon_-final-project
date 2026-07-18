@@ -9,6 +9,7 @@ export interface ButtonProps extends HTMLMotionProps<"button"> {
   variant?: "default" | "outline" | "ghost" | "secondary" | "danger";
   size?: "default" | "sm" | "lg" | "icon";
   isLoading?: boolean;
+  children?: React.ReactNode;
 }
 
 export const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
